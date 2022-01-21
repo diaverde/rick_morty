@@ -15,7 +15,7 @@ class RMCharacter {
   });
 
   /// ID
-  String? id;
+  int? id;
 
   /// Nombre
   String? name;
@@ -42,7 +42,7 @@ class RMCharacter {
   List<String>? episode;
 
   factory RMCharacter.fromJson(Map<String, dynamic> json) => RMCharacter(
-        id: json['id'] as String?,
+        id: json['id'] as int,
         name: json['name'] as String?,
         status: json['status'] as String?,
         species: json['species'] as String?,
