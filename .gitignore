@@ -29,7 +29,19 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+
+# Include only release apks
+/build/*
+!/build/app
+
+/build/app/*
+!/build/app/outputs
+
+/build/app/outputs/*
+!/build/app/outputs/apk
+
+/build/app/outputs/apk/*
+!/build/app/outputs/apk/release
 
 # Web related
 lib/generated_plugin_registrant.dart

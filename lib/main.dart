@@ -54,6 +54,24 @@ class MyApp extends StatelessWidget {
           primarySwatch: mainColor,
           primaryColor: const Color.fromRGBO(77, 188, 195, 1),
           highlightColor: const Color.fromRGBO(255, 255, 0, 1),
+          backgroundColor: const Color.fromRGBO(230, 230, 230, 1),
+          textTheme: const TextTheme(
+            headline1: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.black,
+                height: 2),
+            headline2: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+            headline3: TextStyle(
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+                fontSize: 14,
+                color: Colors.black),
+            bodyText1: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            button: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
+          ),
         ),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{

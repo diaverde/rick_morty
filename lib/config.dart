@@ -15,4 +15,7 @@ class Config {
 
   /// URL para información de episodios
   static String get episodeURL => apiEndpoint + 'episode';
+
+  /// Mínima resolución para visualización web
+  static int get minWebSize => 740;
 }

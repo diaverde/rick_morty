@@ -42,18 +42,14 @@ class DetailPageBody extends StatelessWidget {
         Container(
           margin: const EdgeInsets.all(50),
           padding: const EdgeInsets.all(20),
-          color: const Color.fromRGBO(240, 240, 240, 1),
+          color: Theme.of(context).backgroundColor,
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 20),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
                 child: Text(
                   'Detalle',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    height: 2,
-                  ),
+                  style: Theme.of(context).textTheme.headline1,
                 ),
               ),
               ClipRRect(
@@ -66,11 +62,7 @@ class DetailPageBody extends StatelessWidget {
               ),
               Text(
                 character.currentCharacter.name!,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  height: 3,
-                ),
+                style: Theme.of(context).textTheme.headline1,
                 textAlign: TextAlign.center,
               ),
               Padding(
@@ -80,7 +72,7 @@ class DetailPageBody extends StatelessWidget {
                   'Origen: ${character.currentCharacter.origin}\n'
                   'Ubicación: ${character.currentCharacter.location}\n'
                   '$_numOfEpisodesInfo',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
             ],
