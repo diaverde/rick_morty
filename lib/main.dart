@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:rick_morty/detail.dart';
 import 'package:rick_morty/homepage.dart';
-import 'package:rick_morty/provider/character.dart';
+import 'package:rick_morty/provider/provider_models.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +40,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => CharacterModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LocationModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => EpisodeModel(),
         ),
       ],
       child: MaterialApp(

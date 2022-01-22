@@ -9,4 +9,10 @@ class Config {
 
   /// URL para información de personajes
   static String get characterURL => apiEndpoint + 'character';
+
+  /// URL para información de ubicaciones
+  static String get locationURL => apiEndpoint + 'location';
+
+  /// URL para información de episodios
+  static String get episodeURL => apiEndpoint + 'episode';
 }

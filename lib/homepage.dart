@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'package:rick_morty/provider/character.dart';
+import 'package:rick_morty/provider/provider_models.dart';
 import 'package:rick_morty/models/character.dart';
 
 /// Clase principal
@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
       );
 }
 
-/// Clase para menú
+/// Contenido de la página
 class HomePageDetails extends StatelessWidget {
   const HomePageDetails({Key? key}) : super(key: key);
 
@@ -31,38 +31,32 @@ class HomePageDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     // Capturar modelo Provider de Personajes
     final character = context.watch<CharacterModel>();
+    // Capturar modelo Provider de Ubicaciones
+    final location = context.watch<LocationModel>();
+    // Capturar modelo Provider de Episodios
+    final episode = context.watch<EpisodeModel>();
+    if (location.loadStatus == LoadStatus.idle &&
+        episode.loadStatus == LoadStatus.idle) {
+      loadShowData(episode, location);
+    }
 
     return Column(
       children: [
-        // Texto de bienvenida
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-          child: Column(
-            children: [
-              Text(
-                'La serie en números',
-                style: Theme.of(context).textTheme.headline6,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'Número de episodios: 666',
-                style: Theme.of(context).textTheme.headline6,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'Ubicación con más personajes: Tierra',
-                style: Theme.of(context).textTheme.headline6,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+        const ShowNumbers(),
         CharacterListView(character),
       ],
     );
   }
+
+  // Función para cargar datos de la API
+  void loadShowData(EpisodeModel episode, LocationModel location) async {
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    location.getAllLocations();
+    episode.getEpisodes();
+  }
 }
 
+// Lista de personajes
 class CharacterListView extends StatefulWidget {
   final CharacterModel charModel;
   const CharacterListView(this.charModel, {Key? key}) : super(key: key);
@@ -72,10 +66,11 @@ class CharacterListView extends StatefulWidget {
 }
 
 class _CharacterListViewState extends State<CharacterListView> {
+  // Número de personajes por página
   static const _pageSize = 20;
 
   final PagingController<int, RMCharacter> _pagingController =
-      PagingController(firstPageKey: 10);
+      PagingController(firstPageKey: 11);
 
   @override
   void initState() {
@@ -119,7 +114,7 @@ class _CharacterListViewState extends State<CharacterListView> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromRGBO(224, 224, 224, 1),
+                        color: const Color.fromRGBO(240, 240, 240, 1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       height: 150,
@@ -131,7 +126,10 @@ class _CharacterListViewState extends State<CharacterListView> {
                           Text(
                             item.name!,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, height: 2),
+                                fontWeight: FontWeight.bold,
+                                height: 2,
+                                fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -147,13 +145,15 @@ class _CharacterListViewState extends State<CharacterListView> {
                               ),
                               Text(
                                 item.status!,
-                                style: const TextStyle(height: 1.5),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, height: 1.5),
                               ),
                             ],
                           ),
                           Text(
                             item.species!,
-                            style: const TextStyle(height: 1.5),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, height: 1.5),
                           ),
                           Container(
                             alignment: Alignment.bottomRight,
@@ -180,6 +180,14 @@ class _CharacterListViewState extends State<CharacterListView> {
                 ],
               ),
             ),
+            noItemsFoundIndicatorBuilder: (context) => const Center(
+              child: Text(
+                'No se encontraron personajes.\n'
+                'Verifique conexión e intente de nuevo.',
+                style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
         ),
       );
@@ -188,5 +196,97 @@ class _CharacterListViewState extends State<CharacterListView> {
   void dispose() {
     _pagingController.dispose();
     super.dispose();
+  }
+}
+
+/// Clase para números de la serie
+class ShowNumbers extends StatelessWidget {
+  const ShowNumbers({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Capturar modelo Provider de Ubicaciones
+    final location = context.watch<LocationModel>();
+    // Capturar modelo Provider de Episodios
+    final episode = context.watch<EpisodeModel>();
+
+    // Plantilla del widget a retornar
+    Widget dataSection(Widget content) => Container(
+          padding: const EdgeInsets.all(20),
+          color: const Color.fromRGBO(240, 240, 240, 1),
+          height: 120,
+          child: content,
+        );
+
+    // Varias posibilidades según estado de carga de información
+    if (location.loadStatus == LoadStatus.loading ||
+        episode.loadStatus == LoadStatus.loading) {
+      return dataSection(
+        Center(
+          child: Column(
+            children: const [
+              Text(
+                'Cargando información:\n',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              CircularProgressIndicator()
+            ],
+          ),
+        ),
+      );
+    } else if (location.loadStatus == LoadStatus.error ||
+        episode.loadStatus == LoadStatus.error) {
+      return dataSection(
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                'Error de conexión\n',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Intente de nuevo más tarde o \n'
+                'contacte al administrador del sitio.',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      );
+    } else if (location.loadStatus == LoadStatus.loaded &&
+        episode.loadStatus == LoadStatus.loaded) {
+      return dataSection(
+        Center(
+          child: Column(
+            children: [
+              const Text(
+                'La serie en números',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, height: 2, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Número de episodios: ${episode.numberOfEpisodes}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, height: 1.5),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Ubicación con más personajes: ${location.mostRelevantLocation}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, height: 1.5),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return dataSection(
+        Container(),
+      );
+    }
   }
 }

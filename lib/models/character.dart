@@ -1,5 +1,3 @@
-import 'package:rick_morty/models/place.dart';
-
 /// Clase Character
 class RMCharacter {
   RMCharacter({
@@ -33,10 +31,10 @@ class RMCharacter {
   String? gender;
 
   /// Origen
-  RMPlace? origin;
+  String? origin;
 
   /// Ubicación
-  RMPlace? location;
+  String? location;
 
   /// Episodios
   List<String>? episode;
@@ -48,12 +46,8 @@ class RMCharacter {
         species: json['species'] as String?,
         image: json['image'] as String?,
         gender: json['gender'] as String?,
-        origin: json['origin'] == null
-            ? null
-            : RMPlace.fromJson(json['origin'] as Map<String, dynamic>),
-        location: json['location'] == null
-            ? null
-            : RMPlace.fromJson(json['location'] as Map<String, dynamic>),
+        origin: json['origin']['name'] as String?,
+        location: json['location']['name'] as String?,
         episode: (json['episode'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
