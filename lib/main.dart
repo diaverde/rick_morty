@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:rick_morty/detail.dart';
 import 'package:rick_morty/homepage.dart';
 import 'package:rick_morty/provider/character.dart';
 
@@ -45,11 +46,13 @@ class MyApp extends StatelessWidget {
         title: appTitle,
         theme: ThemeData(
           primarySwatch: mainColor,
-          highlightColor: const Color.fromRGBO(238, 119, 126, 1),
+          primaryColor: const Color.fromRGBO(77, 188, 195, 1),
+          highlightColor: const Color.fromRGBO(255, 255, 0, 1),
         ),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
           '/': (context) => const HomePage(),
+          '/detail': (context) => const DetailPage(),
         },
       ),
     );

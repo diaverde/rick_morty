@@ -32,7 +32,7 @@ class HomePageDetails extends StatelessWidget {
     // Capturar modelo Provider de Personajes
     final character = context.watch<CharacterModel>();
 
-    return ListView(
+    return Column(
       children: [
         // Texto de bienvenida
         Container(
@@ -75,7 +75,7 @@ class _CharacterListViewState extends State<CharacterListView> {
   static const _pageSize = 20;
 
   final PagingController<int, RMCharacter> _pagingController =
-      PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 10);
 
   @override
   void initState() {
@@ -101,31 +101,87 @@ class _CharacterListViewState extends State<CharacterListView> {
   }
 
   @override
-  Widget build(BuildContext context) => PagedListView<int, RMCharacter>(
-        shrinkWrap: true,
-        physics: const ClampingScrollPhysics(),
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<RMCharacter>(
+  Widget build(BuildContext context) => Expanded(
+        child: PagedListView<int, RMCharacter>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<RMCharacter>(
             itemBuilder: (context, item, index) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image(
-                        image: CachedNetworkImageProvider(item.image!),
-                        height: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image(
+                      image: CachedNetworkImageProvider(item.image!),
+                      height: 150,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(224, 224, 224, 1),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      Column(
+                      height: 150,
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(item.name!),
-                          Text(item.status!),
-                          Text(item.species!),
+                          Text(
+                            item.name!,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, height: 2),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5),
+                                child: Icon(
+                                  Icons.circle,
+                                  color:
+                                      widget.charModel.statusColor[item.status],
+                                  size: 14,
+                                ),
+                              ),
+                              Text(
+                                item.status!,
+                                style: const TextStyle(height: 1.5),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            item.species!,
+                            style: const TextStyle(height: 1.5),
+                          ),
+                          Container(
+                            alignment: Alignment.bottomRight,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context).highlightColor,
+                              ),
+                              onPressed: () {
+                                widget.charModel.currentCharacter = item;
+                                Navigator.pushNamed(context, '/detail');
+                              },
+                              child: const Text(
+                                'Detalle',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                )),
+                ],
+              ),
+            ),
+          ),
+        ),
       );
 
   @override

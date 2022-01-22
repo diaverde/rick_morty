@@ -1,9 +1,10 @@
 // ----------------------------------------------------
-// ------Modelo de Datos de Spotify para Provider------
+// ---------Modelo de Personaje para Provider----------
 // ----------------------------------------------------
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rick_morty/config.dart';
 import 'package:rick_morty/models/character.dart';
@@ -25,12 +26,23 @@ enum LoadStatus {
 
 /// Modelo para manejo de estado de personajes
 class CharacterModel extends ChangeNotifier {
-  /// Lista de personajer
+  /// Mapa para asociar estados y colores
+  final Map<String, Color> statusColor = {
+    'Alive': Colors.green,
+    'Dead': Colors.red,
+    'unknown': Colors.grey,
+  };
+
+  /// Lista de personajes
   List<RMCharacter> listOfCharacters = <RMCharacter>[];
+
+  /// Personaje seleccionado
+  RMCharacter currentCharacter = RMCharacter();
 
   /// Reiniciar todas las variables de este modelo
   void resetAll() {
     listOfCharacters.clear();
+    currentCharacter = RMCharacter();
   }
 
   /// Función para obtener personajes
